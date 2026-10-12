@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spending Over Time · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="trends">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Spending over time</h1>
+      <p>Spending split by food group, to show how habits change. Select 62 days or fewer to see it day by day.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section aria-label="Monthly summary">
+      <div class="tiles" id="month-tiles"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-monthly">
+      <header class="card-head">
+        <h2 id="h-monthly">Monthly spending by food group</h2>
+        <label class="toggle"><input type="checkbox" id="toggle-nonfood"> Include non-food</label>
+      </header>
+      <div class="chart-box tall"><canvas id="chart-monthly" role="img" aria-label="Stacked bar chart of monthly spending by food group"></canvas></div>
+      <ul class="legend" id="legend-monthly"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="h-month-table">
+      <header class="card-head">
+        <h2 id="h-month-table">Monthly table</h2>
+      </header>
+      <div class="table-scroll"><table class="data" id="table-monthly"></table></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/spending-over-time.js"></script>
+</body>
+</html>

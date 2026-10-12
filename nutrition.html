@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nutrition · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="nutrition">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Nutrition</h1>
+      <p>Estimated from typical values for each kind of product and the pack sizes in the item names. It shows what was <em>bought</em> each week on average, not what was eaten, and only from Tesco.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-weekly">
+      <header class="card-head">
+        <h2 id="h-weekly">Nutrients bought per week</h2>
+        <p id="weekly-note">Compared with one adult’s weekly reference intake (the UK daily values × 7).</p>
+      </header>
+      <div class="nutri-tiles" id="nutri-tiles"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-calories">
+      <header class="card-head">
+        <h2 id="h-calories">Share of spend vs share of calories</h2>
+        <p>Groups whose calorie bar is longer than their spend bar give more energy per pound.</p>
+      </header>
+      <div class="chart-box tall"><canvas id="chart-calories" role="img" aria-label="Paired bars comparing each food group's share of spending with its share of calories"></canvas></div>
+      <ul class="legend" id="legend-calories"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="h-sources">
+      <header class="card-head">
+        <h2 id="h-sources">Biggest source of each nutrient</h2>
+      </header>
+      <div class="table-scroll"><table class="data" id="table-sources"></table></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/nutrition.js"></script>
+</body>
+</html>

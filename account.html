@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Account · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="account">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Your account</h1>
+      <p>Sign in with your email and password to save purchase-history files to your account and open them again on any device.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section class="card" id="acc-loading">
+      <p class="muted">Checking whether you’re signed in…</p>
+    </section>
+
+    <section class="card" id="acc-off" hidden aria-labelledby="h-off">
+      <header class="card-head">
+        <h2 id="h-off">Sign-in isn’t set up yet</h2>
+        <p>Accounts use Supabase, a hosted service that keeps passwords and saved files secure. To turn it on:</p>
+      </header>
+      <ol class="steps">
+        <li>Create a free account at supabase.com and make a new project.</li>
+        <li>In the project, open <strong>SQL Editor</strong>, paste the contents of <code>supabase/setup.sql</code> from this site’s folder and run it.</li>
+        <li>Open <strong>Project Settings → API</strong> and copy the <strong>Project URL</strong> and the <strong>anon public</strong> key into <code>js/config.js</code>.</li>
+        <li>Reload this page.</li>
+      </ol>
+      <p class="muted">The README has the full steps, including email settings. The rest of the site works without accounts.</p>
+    </section>
+
+    <section class="card" id="acc-unavailable" hidden aria-labelledby="h-unavailable">
+      <header class="card-head">
+        <h2 id="h-unavailable">Sign-in couldn’t load</h2>
+        <p>Signing in needs an internet connection. Check you’re online and reload the page. The rest of the site still works with files in this browser.</p>
+      </header>
+    </section>
+
+    <section class="card auth-card" id="acc-auth" hidden aria-labelledby="h-auth">
+      <div class="segmented" role="tablist" aria-label="Sign in or create an account">
+        <button type="button" role="tab" id="tab-signin" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" id="tab-signup" aria-selected="false">Create account</button>
+      </div>
+      <h2 id="h-auth" class="sr-only">Sign in</h2>
+      <form id="auth-form" class="auth-form" novalidate>
+        <label class="field"><span>Email</span>
+          <input type="email" id="auth-email" autocomplete="email" required placeholder="name@example.com"></label>
+        <label class="field"><span>Password</span>
+          <span class="password-row">
+            <input type="password" id="auth-password" autocomplete="current-password" required minlength="8">
+            <button type="button" class="btn btn-ghost btn-small" id="toggle-password" aria-controls="auth-password">Show</button>
+          </span></label>
+        <label class="field" id="confirm-field" hidden><span>Confirm password</span>
+          <input type="password" id="auth-confirm" autocomplete="new-password" minlength="8"></label>
+        <p class="hint" id="password-hint" hidden>At least 8 characters.</p>
+        <button type="submit" class="btn" id="auth-submit">Sign in</button>
+        <p class="form-message" id="auth-message" role="status" aria-live="polite"></p>
+        <button type="button" class="link-btn" id="show-reset">Forgot your password?</button>
+      </form>
+    </section>
+
+    <section class="card auth-card" id="acc-reset" hidden aria-labelledby="h-reset">
+      <header class="card-head">
+        <h2 id="h-reset">Reset your password</h2>
+        <p>Enter your account’s email and we’ll send a link to choose a new password.</p>
+      </header>
+      <form id="reset-form" class="auth-form" novalidate>
+        <label class="field"><span>Email</span>
+          <input type="email" id="reset-email" autocomplete="email" required placeholder="name@example.com"></label>
+        <button type="submit" class="btn" id="reset-submit">Send reset link</button>
+        <p class="form-message" id="reset-message" role="status" aria-live="polite"></p>
+        <button type="button" class="link-btn" id="back-to-signin">Back to sign in</button>
+      </form>
+    </section>
+
+    <section class="card auth-card" id="acc-newpass" hidden aria-labelledby="h-newpass">
+      <header class="card-head">
+        <h2 id="h-newpass">Choose a new password</h2>
+      </header>
+      <form id="newpass-form" class="auth-form" novalidate>
+        <label class="field"><span>New password</span>
+          <input type="password" id="newpass" autocomplete="new-password" required minlength="8"></label>
+        <label class="field"><span>Confirm new password</span>
+          <input type="password" id="newpass-confirm" autocomplete="new-password" required minlength="8"></label>
+        <p class="hint">At least 8 characters.</p>
+        <button type="submit" class="btn" id="newpass-submit">Save new password</button>
+        <p class="form-message" id="newpass-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card" id="acc-signed-in" hidden aria-labelledby="h-signed-in">
+      <div class="account-row">
+        <div>
+          <h2 id="h-signed-in">Signed in</h2>
+          <p class="muted" id="account-email"></p>
+        </div>
+        <button type="button" class="btn btn-ghost btn-small" id="sign-out">Sign out</button>
+      </div>
+    </section>
+
+    <section class="card" id="acc-save" hidden aria-labelledby="h-save">
+      <header class="card-head">
+        <h2 id="h-save">Save the file you’re viewing</h2>
+        <p id="save-text"></p>
+      </header>
+      <div class="save-row">
+        <label class="field" id="save-name-field"><span>Name</span>
+          <input type="text" id="save-name" maxlength="200" autocomplete="off"></label>
+        <button type="button" class="btn" id="save-current">Save to my account</button>
+      </div>
+      <p class="form-message" id="save-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card" id="acc-files" hidden aria-labelledby="h-files">
+      <header class="card-head">
+        <h2 id="h-files">Your saved files</h2>
+        <p>Open a file to analyse it on every page. Only you can see these.</p>
+      </header>
+      <p class="form-message" id="files-message" role="status" aria-live="polite"></p>
+      <div class="table-scroll"><table class="data files-table" id="files-table"></table></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/pages/account.js"></script>
+</body>
+</html>

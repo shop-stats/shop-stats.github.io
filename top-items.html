@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top Items · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="top">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Top items</h1>
+      <p>The products with the most money spent on them and the ones bought most often, plus every product in the history.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-top">
+      <header class="card-head">
+        <h2 id="h-top">Top ten</h2>
+      </header>
+      <div class="top-grid two" id="top-items"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-all">
+      <header class="card-head">
+        <h2 id="h-all">Every product</h2>
+        <p>Search by name or food group, and click a column heading to sort. <span class="badge">Bulk</span> marks long-life items bought in amounts that last weeks. Servings and shelf life are typical estimates for that kind of product.</p>
+      </header>
+      <div class="search-row">
+        <input type="search" id="product-search" class="search" placeholder="Search products or food groups" aria-label="Search products">
+        <select id="product-filter" class="search filter-select" aria-label="Show">
+          <option value="all">All products</option>
+          <option value="bulk">Bulk buys only</option>
+          <option value="regular">Everyday buys only</option>
+        </select>
+        <span class="muted" id="product-count"></span>
+      </div>
+      <div class="table-scroll"><table class="data" id="table-products"></table></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/top-items.js"></script>
+</body>
+</html>

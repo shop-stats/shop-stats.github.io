@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="overview">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Overview</h1>
+      <p>The headline numbers from the Tesco purchase history. Use the menu to explore each area in detail.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section aria-label="Headline numbers">
+      <div class="tiles" id="tiles"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-insights">
+      <header class="card-head">
+        <h2 id="h-insights">Key takeaways</h2>
+      </header>
+      <ul class="insights" id="insights"></ul>
+    </section>
+
+    <section aria-labelledby="h-explore">
+      <h2 id="h-explore" class="section-title">Explore</h2>
+      <div class="explore" id="explore"></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/overview.js"></script>
+</body>
+</html>

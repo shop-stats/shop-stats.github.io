@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diet Check · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="diet">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Diet check</h1>
+      <p>Tell the page who eats the food bought on this card to estimate calories per person per day, then see how the diet compares with UK NHS guidelines.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-intake">
+      <header class="card-head">
+        <h2 id="h-intake">Daily intake per person</h2>
+      </header>
+      <div class="controls">
+        <label class="field">
+          <span>People sharing the card</span>
+          <input type="number" id="in-people" min="1" max="12" step="1" value="1" inputmode="numeric">
+        </label>
+        <label class="field">
+          <span>Share of their food bought on this card: <output id="out-share" for="in-share">100%</output></span>
+          <input type="range" id="in-share" min="10" max="100" step="5" value="100">
+        </label>
+        <label class="field">
+          <span id="kcal-label">Daily calorie target per person</span>
+          <input type="number" id="in-kcal" min="1000" max="4000" step="50" value="2000" inputmode="numeric">
+        </label>
+      </div>
+
+      <div class="personal" id="personal" hidden>
+        <h3>Your daily calorie need</h3>
+        <p class="muted">With one person on the card, the calorie target comes from your details: your basal metabolic rate (BMR, the energy you burn at rest, using the Mifflin-St Jeor equation) multiplied by how active you are. Your details are saved only in this browser.</p>
+        <div class="personal-grid">
+          <label class="field">
+            <span>Height (cm)</span>
+            <input type="number" id="in-height" min="120" max="230" step="1" inputmode="numeric" placeholder="e.g. 175">
+          </label>
+          <label class="field">
+            <span>Weight (kg)</span>
+            <input type="number" id="in-weight" min="30" max="300" step="0.1" inputmode="decimal" placeholder="e.g. 70">
+          </label>
+          <label class="field">
+            <span>Sex</span>
+            <select id="in-sex">
+              <option value="">Choose…</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Age</span>
+            <input type="number" id="in-age" min="18" max="100" step="1" inputmode="numeric" placeholder="e.g. 30">
+          </label>
+          <label class="field field-wide">
+            <span>Activity level</span>
+            <select id="in-activity"></select>
+          </label>
+        </div>
+        <div class="bmr-result" id="bmr-result" aria-live="polite"></div>
+      </div>
+      <div class="diet-hero" id="diet-hero"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-fortnights">
+      <header class="card-head">
+        <h2 id="h-fortnights">Average daily calories per two-week stretch</h2>
+        <p>Calories bought in each fortnight, divided by 14 days and the number of people. Food bought in one fortnight is often eaten in the next, so single stretches swing more than real eating does.</p>
+      </header>
+      <p class="muted" id="fortnight-note" hidden>The selected dates cover less than two weeks. Widen the date range to see the two-week breakdown.</p>
+      <div id="fortnight-body">
+      <div class="chart-box tall"><canvas id="chart-fortnights" role="img" aria-label="Bar chart of average daily calories per person for each two-week period"></canvas></div>
+      <ul class="legend">
+        <li><span class="swatch" style="background:var(--accent)"></span>kcal per person per day</li>
+        <li><span class="line-key dashed"></span>Daily target</li>
+        <li><span class="line-key dotted"></span>Average across the whole period</li>
+      </ul>
+      <details>
+        <summary>Show fortnightly table</summary>
+        <div class="table-scroll"><table class="data" id="table-fortnights"></table></div>
+      </details>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-checks">
+      <header class="card-head">
+        <h2 id="h-checks">Guideline checks</h2>
+        <label class="toggle"><input type="checkbox" id="in-scale" checked> Judge the diet as if enough of it were eaten to meet the calorie target</label>
+        <p id="scale-note"></p>
+      </header>
+      <div class="checks" id="diet-checks"></div>
+      <p class="muted diet-note">Assumes the rest of each person’s food looks like what is bought here. Vitamin D can’t be judged from shopping; the NHS advises a 10µg supplement in autumn and winter. These are rough estimates for spotting patterns, not medical advice.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/diet-check.js"></script>
+</body>
+</html>

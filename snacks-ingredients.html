@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snacks vs Ingredients · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="types">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Snacks vs ingredients</h1>
+      <p>Every food and drink item is tagged by how it gets eaten: as an ingredient in a meal, as a ready meal, as a drink, or as a snack.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-types">
+      <header class="card-head">
+        <h2 id="h-types">Spending by item type</h2>
+      </header>
+      <div class="type-cards" id="type-cards"></div>
+      <div class="chart-box short"><canvas id="chart-types" role="img" aria-label="Stacked bars comparing share of spend and share of items by item type"></canvas></div>
+      <ul class="legend" id="legend-types"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="h-type-tops">
+      <header class="card-head">
+        <h2 id="h-type-tops">Top items in each type</h2>
+      </header>
+      <div class="top-grid" id="type-tops"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-matrix">
+      <header class="card-head">
+        <h2 id="h-matrix">Item type by food group</h2>
+        <p>How spending on each type splits across the food groups.</p>
+      </header>
+      <div class="table-scroll"><table class="data" id="table-matrix"></table></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/snacks-ingredients.js"></script>
+</body>
+</html>

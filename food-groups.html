@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food Groups · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="groups">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Food groups</h1>
+      <p>Where the food money goes: spending on each major food group as a share of all food and drink spending.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-groups">
+      <header class="card-head">
+        <h2 id="h-groups">Spending by food group</h2>
+        <p>Non-food items are listed separately beside the table.</p>
+      </header>
+      <div class="split">
+        <div class="chart-box tall"><canvas id="chart-groups" role="img" aria-label="Bar chart of spending by food group"></canvas></div>
+        <div>
+          <div class="table-scroll"><table class="data" id="table-groups"></table></div>
+          <div class="subcard" id="nonfood"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-breakdown">
+      <header class="card-head">
+        <h2 id="h-breakdown">What each group is made of</h2>
+        <p>The biggest kinds of product in each food group, by money spent.</p>
+      </header>
+      <div class="top-grid" id="group-breakdown"></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/food-groups.js"></script>
+</body>
+</html>
