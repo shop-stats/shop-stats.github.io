@@ -35,6 +35,8 @@
   //   'include' (default) - all on the day bought; 'spread' - evenly over the days the purchase lasts,
   //   so only the part eaten inside the window counts; 'exclude' - left out entirely (spend too).
   // opts.servingsPerDay = servings eaten per day (one per person), used for how long purchases last.
+  // opts.exclude = [{ start, end }] periods to leave out completely (e.g. time spent living elsewhere):
+  //   their purchases are ignored and their days don't count towards per-day averages.
   function build(parsed, opts) {
     opts = opts || {};
     var range = opts.range;
@@ -63,6 +65,7 @@
     });
 
     var nonfoodSubs = {};
+    var nonfoodAreas = {};
     var products = {};
     var subs = {};
     var monthly = {};
@@ -78,12 +81,30 @@
     var winEnd = range ? range.end.getTime() + 1
       : new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1).getTime();
 
+    // Excluded periods, clipped to the window.
+    var away = (opts.exclude || []).map(function (r) {
+      return { s: Math.max(r.start.getTime(), winStart), e: Math.min(r.end.getTime() + 1, winEnd) };
+    }).filter(function (r) { return r.e > r.s; });
+    var inAway = function (t) { return away.some(function (r) { return t >= r.s && t < r.e; }); };
+    var awayOverlap = function (a, b) {
+      return away.reduce(function (sum, r) { return sum + overlap(a, b, r.s, r.e); }, 0);
+    };
+    var awayMs = away.reduce(function (sum, r) { return sum + (r.e - r.s); }, 0);
+    if (away.length) {
+      baskets = baskets.filter(function (b) { return !inAway(b.date.getTime()); });
+      if (!baskets.length) return null;
+    }
+
     // Two-week stretches counted from the start of the window.
     var FORTNIGHT = 14 * DAY;
     var fortnights = [];
     for (var f = 0; f * FORTNIGHT <= last - first; f++) {
       var start = new Date(first.getTime() + f * FORTNIGHT);
-      fortnights.push({ start: start, end: new Date(start.getTime() + FORTNIGHT - DAY), kcal: 0, spend: 0, foodSpend: 0 });
+      var fs = start.getTime();
+      fortnights.push({
+        start: start, end: new Date(fs + FORTNIGHT - DAY), kcal: 0, spend: 0, foodSpend: 0,
+        awayDays: awayOverlap(fs, Math.min(fs + FORTNIGHT, winEnd)) / DAY
+      });
     }
     var nutritionTotal = zeroNutrients();
     var sizeGuessed = 0;
@@ -91,7 +112,7 @@
 
     parsed.lines.forEach(function (line) {
       var t = line.date.getTime();
-      var bought = t >= winStart && t < winEnd;
+      var bought = t >= winStart && t < winEnd && !inAway(t);
       var cls = App.Classifier.classify(line.name);
       var n = App.Nutrition.nutrientsFor(line, cls, servingsPerDay);
       var isBulk = !!(n && n.bulk);
@@ -100,7 +121,9 @@
       // How much of this line's nutrition belongs in the window.
       var frac = bought ? 1 : 0;
       var lastsMs = n ? n.lastsDays * DAY : 0;
-      if (isBulk && bulkMode === 'spread') frac = overlap(t, t + lastsMs, winStart, winEnd) / lastsMs;
+      if (isBulk && bulkMode === 'spread') {
+        frac = (overlap(t, t + lastsMs, winStart, winEnd) - awayOverlap(t, t + lastsMs)) / lastsMs;
+      }
       if (isBulk && bulkMode === 'exclude') frac = 0;
       if (!bought && frac <= 0) return;
 
@@ -149,7 +172,7 @@
         if (isBulk) daily[dk].bulk += line.total;
 
         var p = products[line.name] || (products[line.name] = {
-          name: line.name, spend: 0, qty: 0, group: cls.group, type: cls.type, sub: cls.subName,
+          name: line.name, spend: 0, qty: 0, group: cls.group, type: cls.type, sub: cls.subName, area: cls.area,
           servings: 0, shelfDays: n ? n.shelfDays : null, lastsDays: 0, bulkQty: 0, bulkSpend: 0
         });
         p.spend += line.total;
@@ -165,6 +188,15 @@
 
         if (cls.group === 'nonfood') {
           nonfoodSubs[cls.subName] = (nonfoodSubs[cls.subName] || 0) + line.total;
+          var area = nonfoodAreas[cls.area] || (nonfoodAreas[cls.area] = { id: cls.area, spend: 0, items: 0, subs: {} });
+          area.spend += line.total;
+          area.items += line.quantity;
+          var ns = area.subs[cls.sub] || (area.subs[cls.sub] = { id: cls.sub, name: cls.subName, consumable: cls.consumable, spend: 0, items: 0, products: {} });
+          ns.spend += line.total;
+          ns.items += line.quantity;
+          ns.products[line.name] = (ns.products[line.name] || 0) + line.total;
+          monthly[mk]['nf:' + cls.area] = (monthly[mk]['nf:' + cls.area] || 0) + line.total;
+          daily[dk]['nf:' + cls.area] = (daily[dk]['nf:' + cls.area] || 0) + line.total;
         }
         if (!cls.matched) {
           unclassified[line.name] = (unclassified[line.name] || 0) + line.total;
@@ -186,7 +218,10 @@
         if (isBulk && bulkMode === 'spread') {
           fortnights.forEach(function (fw) {
             var fs = fw.start.getTime();
-            fw.kcal += n.kcal * overlap(t, t + lastsMs, Math.max(fs, winStart), Math.min(fs + FORTNIGHT, winEnd)) / lastsMs;
+            var a0 = Math.max(fs, winStart), a1 = Math.min(fs + FORTNIGHT, winEnd);
+            var inFortnight = overlap(t, t + lastsMs, a0, a1) -
+              away.reduce(function (sum, r) { return sum + overlap(t, t + lastsMs, Math.max(a0, r.s), Math.min(a1, r.e)); }, 0);
+            fw.kcal += n.kcal * Math.max(0, inFortnight) / lastsMs;
           });
         } else {
           fortnights[Math.min(fortnights.length - 1, Math.floor((t - winStart) / FORTNIGHT))].kcal += n.kcal;
@@ -197,6 +232,11 @@
     // Period covered, filling months with no shopping so gaps show on the chart.
     var days = range ? (last - first + 1) / DAY : Math.max(1, (last - first) / DAY + 1);
     var weeks = range ? days / 7 : Math.max(1, (last - first) / DAY / 7);
+    var awayDays = awayMs / DAY;
+    if (awayDays > 0) {
+      days = Math.max(1, days - awayDays);
+      weeks = Math.max(1 / 7, days / 7);
+    }
     var months = [];
     var cursor = new Date(first.getFullYear(), first.getMonth(), 1);
     while (cursor <= last) {
@@ -251,7 +291,10 @@
       .sort(function (a, b) { return b.spend - a.spend; });
 
     return {
-      period: { first: first, last: last, weeks: weeks, days: days, months: months, dayBuckets: dayBuckets, fortnights: fortnights },
+      period: {
+        first: first, last: last, weeks: weeks, days: days, awayDays: awayDays,
+        months: months, dayBuckets: dayBuckets, fortnights: fortnights
+      },
       totals: {
         paid: paid,
         savings: savings,
@@ -268,6 +311,22 @@
       byType: byType,
       matrix: matrix,
       bulk: bulk,
+      // Non-food by area, then smaller category, each with its top products. Largest first.
+      nonfoodAreas: (App.NONFOOD_AREAS || []).map(function (a) {
+        var x = nonfoodAreas[a.id];
+        if (!x) return null;
+        return {
+          id: a.id, name: a.name, spend: x.spend, items: x.items,
+          subs: Object.keys(x.subs).map(function (k) {
+            var s = x.subs[k];
+            return {
+              id: s.id, name: s.name, consumable: s.consumable, spend: s.spend, items: s.items,
+              products: Object.keys(s.products).map(function (n) { return { name: n, spend: s.products[n] }; })
+                .sort(function (p, q) { return q.spend - p.spend; })
+            };
+          }).sort(function (p, q) { return q.spend - p.spend; })
+        };
+      }).filter(Boolean).sort(function (p, q) { return q.spend - p.spend; }),
       nonfoodSubs: Object.keys(nonfoodSubs)
         .map(function (k) { return { name: k, spend: nonfoodSubs[k] }; })
         .sort(function (a, b) { return b.spend - a.spend; }),

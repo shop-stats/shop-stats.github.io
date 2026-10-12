@@ -70,8 +70,14 @@
 
     var big = s.totals.biggest;
     out.push('The biggest single shop was <strong>' + gbp(big.paid) + '</strong> on ' + UI.fmtDate(big.date) +
-      '. Non-food items (mostly ' + esc((s.nonfoodSubs[0] || { name: 'household' }).name.toLowerCase()) + ') made up ' +
-      pct(s.totals.nonfoodSpend / s.totals.itemSpend) + ' of all spending, and ' + busiestMonth(s).longLabel + ' was the most expensive month.');
+      ', and ' + busiestMonth(s).longLabel + ' was the most expensive month.');
+
+    if (s.nonfoodAreas.length) {
+      var areas = s.nonfoodAreas.slice(0, 3).map(function (a) { return esc(a.name.toLowerCase()) + ' ' + gbp(a.spend, 0); });
+      out.push('Household and other non-food items came to <strong>' + gbp(s.totals.nonfoodSpend, 0) + '</strong> (' +
+        pct(s.totals.nonfoodSpend / s.totals.itemSpend) + ' of all spending): ' + UI.listText(areas) +
+        '. See the breakdown on the <a href="food-groups.html">Food groups</a> page.');
+    }
 
     $('insights').innerHTML = out.map(function (x) { return '<li>' + x + '</li>'; }).join('');
   }
@@ -79,7 +85,7 @@
   function renderExplore(s) {
     var food = s.totals.foodSpend;
     var top = UI.groupsBySpend(s)[0];
-    var settings = App.Diet.resolve(App.Diet.loadSettings());
+    var settings = App.Survey.settings();
     var diet = App.Diet.assess(s, settings);
     var gaps = diet.checks.filter(function (c) { return c.status.dir === 'low' && c.id !== 'kcal'; })
       .map(function (c) { return c.name.charAt(0).toLowerCase() + c.name.slice(1); });
@@ -92,6 +98,10 @@
       trends: 'Most expensive month: ' + busiestMonth(s).longLabel + '.',
       top: mostOften ? 'Most bought: ' + esc(mostOften.name) + ' (×' + mostOften.qty + ').' : '',
       prices: 'The foods whose prices changed the most in the dates you choose, and how often deals came round.',
+      list: 'A suggested list for your next shop, your top 20 items and what you usually buy together.',
+      survey: settings.answered
+        ? 'Shopping for ' + (settings.people === 1 ? 'just you' : settings.people + ' people') + '. Change your answers any time.'
+        : 'Answer a few quick questions about who you shop for, to personalise the diet check.',
       nutrition: round(s.nutrition.total.kcal / s.nutrition.weeks) + ' kcal of food bought per week on average.',
       diet: 'About ' + round(diet.day.kcal) + ' kcal per person per day.' +
         (gaps.length ? ' Possible gaps: ' + esc(UI.listText(gaps.slice(0, 3))) + '.' : '')
@@ -106,6 +116,7 @@
   var timeframe = App.Timeframe.init({
     storeKey: 'tesco-overview-timeframe',
     render: function (s) {
+      $('survey-prompt').hidden = App.Survey.settings().answered;
       renderTiles(s);
       renderInsights(s);
       renderExplore(s);

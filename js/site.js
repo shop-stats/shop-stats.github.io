@@ -5,11 +5,13 @@
 
   App.PAGES = [
     { id: 'overview',  href: 'index.html',              name: 'Overview' },
+    { id: 'survey',    href: 'survey.html',             name: 'About you' },
     { id: 'groups',    href: 'food-groups.html',        name: 'Food groups' },
     { id: 'types',     href: 'snacks-ingredients.html', name: 'Snacks vs ingredients' },
     { id: 'trends',    href: 'spending-over-time.html', name: 'Spending over time' },
     { id: 'top',       href: 'top-items.html',          name: 'Top items' },
     { id: 'prices',    href: 'price-trends.html',       name: 'Price trends' },
+    { id: 'list',      href: 'shopping-list.html',      name: 'Shopping list' },
     { id: 'nutrition', href: 'nutrition.html',          name: 'Nutrition' },
     { id: 'diet',      href: 'diet-check.html',         name: 'Diet check' }
   ];
@@ -45,6 +47,18 @@
     return id;
   }
 
+  function areaName(id) {
+    var a = (App.NONFOOD_AREAS || []).filter(function (x) { return x.id === id; })[0];
+    return a ? a.name : 'Non-food';
+  }
+
+  // A product's category for display: its food group, or for household items "Area · smaller category".
+  function categoryLabel(p) {
+    if (p.group === 'nonfood') return areaName(p.area) + (p.sub && p.sub !== areaName(p.area) ? ' · ' + p.sub : '');
+    if (p.group === 'unclassified') return 'Unclassified';
+    return groupName(p.group);
+  }
+
   function swatch(id, kind) {
     var v = kind === 'type' ? '--t-' + id : '--g-' + id;
     return '<span class="swatch" style="background:var(' + v + ')"></span>';
@@ -62,7 +76,7 @@
     var body = items.length
       ? '<ol>' + items.map(function (p) {
           var tag = p.group && p.group !== 'unclassified'
-            ? swatch(p.group) + esc(groupName(p.group)) : 'Unclassified';
+            ? swatch(p.group) + esc(categoryLabel(p)) : 'Unclassified';
           var badge = p.bulkQty ? '<span class="badge" title="Long-life item bought in an amount that lasts weeks">Bulk</span>' : '';
           return '<li><span class="name">' + esc(p.name) + badge + '<small>' + tag + '</small></span>' +
             '<span class="val">' + valueFn(p) + '</span></li>';
@@ -80,6 +94,7 @@
 
   App.UI = {
     $: $, esc: esc, fmtDate: fmtDate, round: round, fmtNum: fmtNum, groupName: groupName, swatch: swatch,
+    areaName: areaName, categoryLabel: categoryLabel,
     groupsBySpend: groupsBySpend, listText: listText, topList: topList, notice: notice,
     gbp: App.Charts.gbp, pct: App.Charts.pct
   };

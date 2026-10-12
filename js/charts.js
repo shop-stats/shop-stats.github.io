@@ -311,7 +311,7 @@
     opts.plugins.tooltip.callbacks = {
       title: function (items) {
         var r = rows[items[0].dataIndex];
-        return fmt(r.start) + ' – ' + fmt(r.end) + (r.days < 14 ? ' (' + r.days + ' days)' : '');
+        return fmt(r.start) + ' – ' + fmt(r.end) + (r.days < 14 ? ' (' + r.days + ' days counted)' : '');
       },
       label: function (c) {
         return Math.round(c.raw).toLocaleString('en-GB') + ' kcal per person per day';
@@ -328,9 +328,34 @@
       ]
     };
 
+    // Shades fortnights that fall in a left-out period and labels them "Away".
+    var awayBands = {
+      id: 'awayBands',
+      beforeDatasetsDraw: function (chart) {
+        var ctx = chart.ctx, area = chart.chartArea, x = chart.scales.x;
+        var step = rows.length > 1 ? x.getPixelForValue(1) - x.getPixelForValue(0) : area.right - area.left;
+        ctx.save();
+        rows.forEach(function (r, i) {
+          if (!r.away) return;
+          var cx = x.getPixelForValue(i);
+          ctx.fillStyle = css('--surface-2');
+          ctx.fillRect(cx - step / 2 + 1, area.top, step - 2, area.bottom - area.top);
+          ctx.save();
+          ctx.translate(cx, area.bottom - 8);
+          ctx.rotate(-Math.PI / 2);
+          ctx.font = '600 11px ' + Chart.defaults.font.family;
+          ctx.fillStyle = css('--muted');
+          ctx.textBaseline = 'middle';
+          ctx.fillText('Away', 0, 0);
+          ctx.restore();
+        });
+        ctx.restore();
+      }
+    };
+
     return make('chart-fortnights', {
       type: 'bar',
-      plugins: [refLines],
+      plugins: [refLines, awayBands],
       data: {
         labels: rows.map(function (r) { return fmt(r.start); }),
         datasets: [{

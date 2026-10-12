@@ -150,11 +150,15 @@
       var s = App.Aggregate.build(parsed, {
         range: all ? null : { start: start, end: end },
         bulk: bulkMode(),
-        servingsPerDay: opts.servingsPerDay ? opts.servingsPerDay() : 1
+        servingsPerDay: opts.servingsPerDay ? opts.servingsPerDay() : 1,
+        exclude: opts.exclude ? opts.exclude() : null
       });
       if (!s || (s.totals.foodSpend <= 0 && s.nutrition.total.kcal <= 0)) {
         main.classList.add('tf-empty');
-        $('tf-summary').textContent = 'No food or drink was bought between these dates. Widen the range to see results.';
+        $('tf-summary').textContent = (opts.exclude && opts.exclude().length)
+          ? 'There’s no shopping to assess between these dates once left-out periods are removed. Widen the range, or include a period below.'
+          : 'No food or drink was bought between these dates. Widen the range to see results.';
+        if (opts.onEmpty) opts.onEmpty();
         if (opts.bulkControls) $('tf-bulk-details').hidden = true;
         last = null;
         return;
@@ -168,7 +172,8 @@
         'bulk buys counted when bought (' + gbp(s.bulk.spend) + ')';
       $('tf-summary').innerHTML = '<strong>' + (all ? 'Whole period' : 'Selected dates') + '</strong><br>' +
         s.totals.shops + ' shop' + (s.totals.shops === 1 ? '' : 's') + ' · ' + gbp(s.totals.foodSpend) + ' of food &amp; drink · ' +
-        days + ' day' + (days === 1 ? '' : 's') + ' · ' + bulkText;
+        days + ' day' + (days === 1 ? '' : 's') +
+        (s.period.awayDays >= 1 ? ' counted (' + Math.round(s.period.awayDays) + ' left out)' : '') + ' · ' + bulkText;
       renderBulkList(s);
       var info = {
         all: all,

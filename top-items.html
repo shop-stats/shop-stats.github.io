@@ -28,12 +28,14 @@
     <section class="card" aria-labelledby="h-all">
       <header class="card-head">
         <h2 id="h-all">Every product</h2>
-        <p>Search by name or food group, and click a column heading to sort. <span class="badge">Bulk</span> marks long-life items bought in amounts that last weeks. Servings and shelf life are typical estimates for that kind of product.</p>
+        <p>Search by name or category (for example “laundry” or “oral care”), filter to food or household items, and click a column heading to sort. <span class="badge">Bulk</span> marks long-life items bought in amounts that last weeks. Servings and shelf life are typical estimates for that kind of product.</p>
       </header>
       <div class="search-row">
-        <input type="search" id="product-search" class="search" placeholder="Search products or food groups" aria-label="Search products">
+        <input type="search" id="product-search" class="search" placeholder="Search products or categories, e.g. laundry" aria-label="Search products">
         <select id="product-filter" class="search filter-select" aria-label="Show">
           <option value="all">All products</option>
+          <option value="food">Food &amp; drink only</option>
+          <option value="household">Household &amp; non-food only</option>
           <option value="bulk">Bulk buys only</option>
           <option value="regular">Everyday buys only</option>
         </select>
@@ -53,6 +55,8 @@
   <script src="js/nutrition.js"></script>
   <script src="js/aggregate.js"></script>
   <script src="js/diet.js"></script>
+  <script src="js/away.js"></script>
+  <script src="js/survey.js"></script>
   <script src="js/charts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/config.js"></script>

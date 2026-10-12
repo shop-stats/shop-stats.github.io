@@ -72,12 +72,32 @@ App.MICRO = {
 
 App.SUBS = {
   // Non-food: counted in spending, no nutrition.
-  nf_home:       { group: 'nonfood', name: 'Home & kitchen' },
-  nf_clothing:   { group: 'nonfood', name: 'Clothing' },
-  nf_cleaning:   { group: 'nonfood', name: 'Cleaning & household' },
-  nf_toiletries: { group: 'nonfood', name: 'Toiletries & beauty' },
-  nf_gifts:      { group: 'nonfood', name: 'Gifts, cards & flowers' },
-  nf_health:     { group: 'nonfood', name: 'Health & supplements' },
+  // area: one of App.NONFOOD_AREAS. consumable: used up and re-bought, so the Shopping list predicts it.
+  nf_surface:     { group: 'nonfood', area: 'cleaning', consumable: true, name: 'Surface cleaners & disinfectant' },
+  nf_dish:        { group: 'nonfood', area: 'cleaning', consumable: true, name: 'Washing-up & dishwasher' },
+  nf_laundry:     { group: 'nonfood', area: 'cleaning', consumable: true, name: 'Laundry' },
+  nf_bathroom:    { group: 'nonfood', area: 'cleaning', consumable: true, name: 'Toilet & bathroom cleaning' },
+  nf_cloths:      { group: 'nonfood', area: 'cleaning', consumable: true, name: 'Cloths, sponges & gloves' },
+  nf_oral:        { group: 'nonfood', area: 'personal', consumable: true, name: 'Oral care' },
+  nf_skin:        { group: 'nonfood', area: 'personal', consumable: true, name: 'Skin care' },
+  nf_body:        { group: 'nonfood', area: 'personal', consumable: true, name: 'Body wash & soap' },
+  nf_hair:        { group: 'nonfood', area: 'personal', consumable: true, name: 'Hair care' },
+  nf_deodorant:   { group: 'nonfood', area: 'personal', consumable: true, name: 'Deodorant' },
+  nf_shaving:     { group: 'nonfood', area: 'personal', consumable: true, name: 'Shaving' },
+  nf_sanitary:    { group: 'nonfood', area: 'personal', consumable: true, name: 'Period products' },
+  nf_paper:       { group: 'nonfood', area: 'paper', consumable: true, name: 'Toilet roll & tissues' },
+  nf_wraps:       { group: 'nonfood', area: 'paper', consumable: true, name: 'Foil, cling film & food bags' },
+  nf_bags:        { group: 'nonfood', area: 'paper', consumable: false, name: 'Shopping bags' },
+  nf_health:      { group: 'nonfood', area: 'health', consumable: true, name: 'Medicines & supplements' },
+  nf_baby:        { group: 'nonfood', area: 'family', consumable: true, name: 'Baby' },
+  nf_pet:         { group: 'nonfood', area: 'family', consumable: true, name: 'Pet' },
+  nf_kitchenware: { group: 'nonfood', area: 'home', consumable: false, name: 'Kitchenware' },
+  nf_bedding:     { group: 'nonfood', area: 'home', consumable: false, name: 'Bedding & towels' },
+  nf_furnishings: { group: 'nonfood', area: 'home', consumable: false, name: 'Home furnishings' },
+  nf_diy:         { group: 'nonfood', area: 'home', consumable: false, name: 'DIY & stationery' },
+  nf_clothing:    { group: 'nonfood', area: 'clothing', consumable: false, name: 'Clothing' },
+  nf_flowers:     { group: 'nonfood', area: 'gifts', consumable: false, name: 'Flowers' },
+  nf_cards:       { group: 'nonfood', area: 'gifts', consumable: false, name: 'Cards & gift wrap' },
 
   // Fruit & vegetables
   avocado:      { group: 'fv', type: 'ingredient', name: 'Avocados',        n: [160, 2, 8.5, 0.7, 14.7, 6.7, 0], unit: 170, def: 170 },

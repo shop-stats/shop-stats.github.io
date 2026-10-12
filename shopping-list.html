@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopping List · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="list">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>Shopping list</h1>
+      <p>Your most-bought items, what you tend to buy together, and a suggested list for your next shop based on how often you buy each thing.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section class="list-controls" aria-label="Shopping list settings">
+      <div class="field">
+        <span class="control-label">Look at</span>
+        <div class="segmented" role="radiogroup" aria-label="Look at exact products or kinds of product">
+          <button type="button" role="radio" id="group-product" aria-checked="true">Exact products</button>
+          <button type="button" role="radio" id="group-kind" aria-checked="false">Kinds of product</button>
+        </div>
+      </div>
+      <form class="field plan-for" id="plan-form" novalidate>
+        <label for="plan-date" class="control-label">Planning a shop on (dd/mm/yyyy)</label>
+        <span class="plan-row">
+          <input type="text" id="plan-date" inputmode="numeric" maxlength="10" placeholder="dd/mm/yyyy" autocomplete="off">
+          <button type="submit" class="btn btn-small">Update</button>
+          <button type="button" class="btn btn-ghost btn-small" id="plan-today">Today</button>
+        </span>
+      </form>
+      <label class="toggle"><input type="checkbox" id="pause-away" checked> Pause the countdown during quiet periods</label>
+      <p class="range-error" id="plan-error" hidden></p>
+    </section>
+
+    <section class="card" aria-labelledby="h-next">
+      <header class="card-head">
+        <h2 id="h-next">Suggested list for your next shop</h2>
+        <p id="next-intro"></p>
+      </header>
+      <div id="next-list"></div>
+      <div class="list-footer">
+        <p class="list-total" id="list-total"></p>
+        <div class="list-actions">
+          <button type="button" class="btn" id="copy-list">Copy list</button>
+          <span class="form-message" id="copy-message" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+      <details id="stopped-details" hidden>
+        <summary id="stopped-summary"></summary>
+        <p class="muted">These used to be regulars but haven’t been bought for over three of their usual gaps, so they’re left off the list.</p>
+        <ul class="stopped-list" id="stopped-list"></ul>
+      </details>
+    </section>
+
+    <section id="timeframe"></section>
+
+    <section class="card" aria-labelledby="h-top">
+      <header class="card-head">
+        <h2 id="h-top">Your 20 most-bought items</h2>
+        <p>Ranked by how many shops included them in the chosen dates. The small chart shows how many shops included each item month by month, across your whole history.</p>
+      </header>
+      <div class="table-scroll"><table class="data top-table" id="table-top"></table></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-together">
+      <header class="card-head">
+        <h2 id="h-together">Often bought together</h2>
+        <p>Combinations of your top items that turn up in the same shop more often than chance would suggest, which usually points to meals you make. “3×” means three times more likely than if they were bought independently.</p>
+      </header>
+      <div class="together-grid">
+        <div>
+          <h3>Groups of three</h3>
+          <ul class="combo-list" id="triples"></ul>
+        </div>
+        <div>
+          <h3>Pairs</h3>
+          <ul class="combo-list" id="pairs"></ul>
+        </div>
+      </div>
+    </section>
+
+    <p class="muted method-note" id="list-method"></p>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/away.js"></script>
+  <script src="js/survey.js"></script>
+  <script src="js/basket.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/timeframe.js"></script>
+  <script src="js/pages/shopping-list.js"></script>
+</body>
+</html>

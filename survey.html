@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About You · Tesco Spending Summary</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="survey">
+  <header id="site-header"></header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <h1>About you</h1>
+      <p>A few quick questions about who you shop for. Your answers shape the Diet check: how many people the food feeds, how much they need, and which times of year to leave out. They’re saved only in this browser.</p>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+
+    <section class="card survey-card" id="survey-card" aria-labelledby="q-title">
+      <div class="survey-progress" aria-hidden="true"><span id="progress-bar"></span></div>
+      <p class="survey-step" id="q-step"></p>
+      <h2 class="survey-q" id="q-title"></h2>
+      <p class="survey-help" id="q-help"></p>
+      <form id="q-form" class="survey-form" novalidate>
+        <div id="q-body"></div>
+        <p class="survey-error" id="q-error" role="alert" hidden></p>
+        <div class="survey-nav">
+          <button type="button" class="btn btn-ghost" id="q-back">Back</button>
+          <button type="button" class="btn btn-ghost" id="q-skip" hidden>Skip this question</button>
+          <button type="submit" class="btn" id="q-next">Next</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" id="summary-card" hidden aria-labelledby="h-summary">
+      <header class="card-head">
+        <h2 id="h-summary">Your answers</h2>
+        <p id="summary-result"></p>
+      </header>
+      <dl class="answer-list" id="answer-list"></dl>
+      <div class="survey-nav">
+        <a class="btn" href="diet-check.html">See your diet check</a>
+        <button type="button" class="btn btn-ghost" id="restart">Start again</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="footer"></footer>
+
+  <script src="data/purchases.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/nutrition.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/aggregate.js"></script>
+  <script src="js/diet.js"></script>
+  <script src="js/away.js"></script>
+  <script src="js/survey.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/account.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/pages/survey.js"></script>
+</body>
+</html>

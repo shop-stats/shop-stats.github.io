@@ -26,11 +26,32 @@
     var unc = s.byGroup.unclassified;
     $('nonfood').innerHTML =
       '<h3>' + swatch('nonfood') + 'Non-food: ' + gbp(nf.spend) + ' (' + pct(nf.spend / s.totals.itemSpend) + ' of everything)</h3>' +
-      '<ul>' + s.nonfoodSubs.map(function (x) {
-        return '<li><span>' + esc(x.name) + '</span><span>' + gbp(x.spend) + '</span></li>';
+      '<ul>' + s.nonfoodAreas.map(function (a) {
+        return '<li><span>' + esc(a.name) + '</span><span>' + gbp(a.spend) + '</span></li>';
       }).join('') +
       (unc.spend > 0 ? '<li><span>Unclassified items</span><span>' + gbp(unc.spend) + '</span></li>' : '') +
       '</ul>';
+  }
+
+  // Non-food areas, each with its smaller categories and top products.
+  function renderHousehold(s) {
+    var total = s.byGroup.nonfood.spend;
+    if (!s.nonfoodAreas.length) {
+      $('household-intro').textContent = 'No household or other non-food items were bought in these dates.';
+      $('household-areas').innerHTML = '';
+      return;
+    }
+    $('household-intro').textContent = gbp(total) + ' went on things that aren’t food or drink in these dates (' +
+      pct(total / s.totals.itemSpend) + ' of everything). Here it is by area and smaller category, with the products you spent most on.';
+    $('household-areas').innerHTML = s.nonfoodAreas.map(function (a) {
+      return '<div class="area-card"><div class="area-head"><h3>' + esc(a.name) + '</h3>' +
+        '<span class="area-total">' + gbp(a.spend) + ' <small>' + pct(a.spend / total) + '</small></span></div>' +
+        '<ul class="area-subs">' + a.subs.map(function (sub) {
+          var eg = sub.products.slice(0, 2).map(function (p) { return p.name; });
+          return '<li><div class="area-sub-row"><span>' + esc(sub.name) + '</span><span>' + gbp(sub.spend) + '</span></div>' +
+            '<small>×' + sub.items + (eg.length ? ' · ' + esc(eg.join(', ')) + (sub.products.length > 2 ? ' and ' + (sub.products.length - 2) + ' more' : '') : '') + '</small></li>';
+        }).join('') + '</ul></div>';
+    }).join('');
   }
 
   // What each group is mostly made of, by sub-category.
@@ -49,6 +70,7 @@
     render: function (s) {
       renderTable(s);
       renderNonfood(s);
+      renderHousehold(s);
       renderBreakdown(s);
       App.Charts.groupSpend(s);
     }

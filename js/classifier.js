@@ -27,13 +27,15 @@
           sub: r.sub,
           subName: sub.name,
           group: sub.group,
+          area: sub.area || null,               // non-food area, e.g. 'cleaning'
+          consumable: !!sub.consumable,         // household item that gets used up and re-bought
           type: sub.group === 'nonfood' ? null : (r.opts.type || sub.type),
           unit: r.opts.unit || sub.unit,
           matched: true
         };
       }
     }
-    return { sub: null, subName: 'Unclassified', group: 'unclassified', type: null, matched: false };
+    return { sub: null, subName: 'Unclassified', group: 'unclassified', area: null, consumable: false, type: null, matched: false };
   }
 
   App.Classifier = { classify: classify };

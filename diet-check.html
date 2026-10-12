@@ -12,69 +12,47 @@
   <main class="wrap">
     <div class="page-head">
       <h1>Diet check</h1>
-      <p>Tell the page who eats the food bought on this card to estimate calories per person per day, then see how the diet compares with UK NHS guidelines.</p>
+      <p>Using your answers in <a href="survey.html">About you</a>, this estimates what each person eats a day from your Tesco shopping and compares it with UK NHS guidelines.</p>
     </div>
     <div class="notice" id="notice" hidden></div>
 
     <section id="timeframe"></section>
 
-    <section class="card" aria-labelledby="h-intake">
+    <section class="card household-card" id="household-card" aria-labelledby="h-household">
+      <div class="household-row">
+        <div>
+          <h2 id="h-household">Your household</h2>
+          <p id="household-summary"></p>
+        </div>
+        <a class="btn btn-small" id="survey-link" href="survey.html">Edit your answers</a>
+      </div>
+    </section>
+
+    <section class="card" id="away-card" aria-labelledby="h-away" hidden>
+      <header class="card-head">
+        <h2 id="h-away">Quiet periods</h2>
+        <p id="away-intro"></p>
+      </header>
+      <ul class="away-list" id="away-list"></ul>
+    </section>
+
+    <section class="card insufficient-card" id="insufficient" hidden aria-labelledby="h-insufficient">
+      <h2 id="h-insufficient">Not enough data for an accurate assessment</h2>
+      <p id="insufficient-text"></p>
+      <button type="button" class="btn btn-ghost btn-small" id="show-anyway">Show a rough estimate anyway</button>
+    </section>
+
+    <section class="card" id="intake-card" aria-labelledby="h-intake">
       <header class="card-head">
         <h2 id="h-intake">Daily intake per person</h2>
       </header>
-      <div class="controls">
-        <label class="field">
-          <span>People sharing the card</span>
-          <input type="number" id="in-people" min="1" max="12" step="1" value="1" inputmode="numeric">
-        </label>
-        <label class="field">
-          <span>Share of their food bought on this card: <output id="out-share" for="in-share">100%</output></span>
-          <input type="range" id="in-share" min="10" max="100" step="5" value="100">
-        </label>
-        <label class="field">
-          <span id="kcal-label">Daily calorie target per person</span>
-          <input type="number" id="in-kcal" min="1000" max="4000" step="50" value="2000" inputmode="numeric">
-        </label>
-      </div>
-
-      <div class="personal" id="personal" hidden>
-        <h3>Your daily calorie need</h3>
-        <p class="muted">With one person on the card, the calorie target comes from your details: your basal metabolic rate (BMR, the energy you burn at rest, using the Mifflin-St Jeor equation) multiplied by how active you are. Your details are saved only in this browser.</p>
-        <div class="personal-grid">
-          <label class="field">
-            <span>Height (cm)</span>
-            <input type="number" id="in-height" min="120" max="230" step="1" inputmode="numeric" placeholder="e.g. 175">
-          </label>
-          <label class="field">
-            <span>Weight (kg)</span>
-            <input type="number" id="in-weight" min="30" max="300" step="0.1" inputmode="decimal" placeholder="e.g. 70">
-          </label>
-          <label class="field">
-            <span>Sex</span>
-            <select id="in-sex">
-              <option value="">Choose…</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Age</span>
-            <input type="number" id="in-age" min="18" max="100" step="1" inputmode="numeric" placeholder="e.g. 30">
-          </label>
-          <label class="field field-wide">
-            <span>Activity level</span>
-            <select id="in-activity"></select>
-          </label>
-        </div>
-        <div class="bmr-result" id="bmr-result" aria-live="polite"></div>
-      </div>
       <div class="diet-hero" id="diet-hero"></div>
     </section>
 
-    <section class="card" aria-labelledby="h-fortnights">
+    <section class="card" id="fortnights-card" aria-labelledby="h-fortnights">
       <header class="card-head">
         <h2 id="h-fortnights">Average daily calories per two-week stretch</h2>
-        <p>Calories bought in each fortnight, divided by 14 days and the number of people. Food bought in one fortnight is often eaten in the next, so single stretches swing more than real eating does.</p>
+        <p>Calories bought in each fortnight, divided by the days counted and the number of people. Quiet periods you leave out show as “Away”. Food bought in one fortnight is often eaten in the next, so single stretches swing more than real eating does.</p>
       </header>
       <p class="muted" id="fortnight-note" hidden>The selected dates cover less than two weeks. Widen the date range to see the two-week breakdown.</p>
       <div id="fortnight-body">
@@ -91,7 +69,7 @@
       </div>
     </section>
 
-    <section class="card" aria-labelledby="h-checks">
+    <section class="card" id="checks-card" aria-labelledby="h-checks">
       <header class="card-head">
         <h2 id="h-checks">Guideline checks</h2>
         <label class="toggle"><input type="checkbox" id="in-scale" checked> Judge the diet as if enough of it were eaten to meet the calorie target</label>
@@ -113,6 +91,8 @@
   <script src="js/nutrition.js"></script>
   <script src="js/aggregate.js"></script>
   <script src="js/diet.js"></script>
+  <script src="js/away.js"></script>
+  <script src="js/survey.js"></script>
   <script src="js/charts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/config.js"></script>

@@ -31,7 +31,10 @@
     var list = products.filter(function (p) {
       if (filter === 'bulk' && !p.bulkQty) return false;
       if (filter === 'regular' && p.bulkQty) return false;
-      return !q || p.name.toLowerCase().indexOf(q) !== -1 || UI.groupName(p.group).toLowerCase().indexOf(q) !== -1;
+      if (filter === 'food' && (p.group === 'nonfood' || p.group === 'unclassified')) return false;
+      if (filter === 'household' && p.group !== 'nonfood') return false;
+      return !q || p.name.toLowerCase().indexOf(q) !== -1 || UI.categoryLabel(p).toLowerCase().indexOf(q) !== -1 ||
+        (p.sub || '').toLowerCase().indexOf(q) !== -1;
     }).sort(function (a, b) {
       var x = a[sort.key], y = b[sort.key];
       if (x == null) x = -1;
@@ -45,14 +48,14 @@
         '><button type="button" class="sort" data-key="' + key + '">' + label + arrow(key) + '</button></th>';
     };
     $('table-products').innerHTML =
-      '<thead><tr>' + th('name', 'Product') + '<th>Food group</th>' +
+      '<thead><tr>' + th('name', 'Product') + '<th>Category</th>' +
         th('qty', 'Bought', 'num') + th('spend', 'Spent', 'num') +
         th('servings', 'Servings', 'num', 'Estimated servings in everything bought') +
         th('shelfDays', 'Keeps', 'num', 'Typical shelf life once bought') +
       '</tr></thead><tbody>' +
       list.map(function (p) {
         return '<tr><td>' + esc(p.name) + bulkBadge(p) + '</td><td>' +
-          (p.group === 'unclassified' ? 'Unclassified' : swatch(p.group) + esc(UI.groupName(p.group))) +
+          (p.group === 'unclassified' ? 'Unclassified' : swatch(p.group) + esc(UI.categoryLabel(p))) +
           '</td><td class="num">×' + p.qty + '</td><td class="num">' + gbp(p.spend) +
           '</td><td class="num">' + (p.servings ? round(p.servings) : '–') +
           '</td><td class="num">' + keeps(p.shelfDays) + '</td></tr>';

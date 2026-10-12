@@ -195,13 +195,16 @@
     // Average daily calories per person in each two-week stretch (the last stretch may be shorter).
     var DAY = 86400000;
     var fortnights = s.period.fortnights.map(function (f) {
-      var days = Math.min(14, Math.floor((s.period.last - f.start) / DAY) + 1);
+      var span = Math.min(14, Math.floor((s.period.last - f.start) / DAY) + 1);
+      var days = Math.max(0, Math.round(span - (f.awayDays || 0)));  // days not in a left-out period
       return {
         start: f.start,
         end: f.end,
         days: days,
+        awayDays: Math.round(f.awayDays || 0),
+        away: days < 1,
         spend: f.foodSpend,
-        kcalPerDay: f.kcal / (days * people * share)
+        kcalPerDay: days < 1 ? null : f.kcal / (days * people * share)
       };
     });
 

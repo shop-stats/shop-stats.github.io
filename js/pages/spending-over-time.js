@@ -12,6 +12,16 @@
     return list;
   }
 
+  // Table columns: like the chart, but non-food is split into its areas (cleaning, personal care...).
+  function tableSeries(s) {
+    var list = App.GROUPS.slice();
+    if (includeNonfood) {
+      s.nonfoodAreas.forEach(function (a) { list.push({ id: 'nf:' + a.id, name: a.name, area: true }); });
+    }
+    if (s.byGroup.unclassified.spend > 0) list.push(App.UNCLASSIFIED);
+    return list;
+  }
+
   function bucketTotal(m, list) {
     return list.reduce(function (t, g) { return t + (m.byGroup[g.id] || 0); }, 0);
   }
@@ -47,18 +57,20 @@
   function renderTable(s, g) {
     var list = series(s);
     $('h-monthly').textContent = (g.unit === 'day' ? 'Daily' : 'Monthly') + ' spending by food group';
-    $('h-month-table').textContent = (g.unit === 'day' ? 'Daily' : 'Monthly') + ' table';
+    $('h-month-table').textContent = (g.unit === 'day' ? 'Daily' : 'Monthly') + ' table' +
+      (includeNonfood ? ', with non-food split by area' : '');
     $('legend-monthly').innerHTML = list.map(function (gr) {
       return '<li>' + swatch(gr.id) + esc(gr.name) + '</li>';
     }).join('');
 
-    var head = '<thead><tr><th>' + g.Unit + '</th>' + list.map(function (gr) {
-      return '<th class="num">' + esc(gr.name) + '</th>';
+    var cols = tableSeries(s);
+    var head = '<thead><tr><th>' + g.Unit + '</th>' + cols.map(function (gr) {
+      return '<th class="num' + (gr.area ? ' area-col' : '') + '">' + esc(gr.name) + '</th>';
     }).join('') + '<th class="num">Total</th><th class="num">Of which bulk</th></tr></thead>';
     var rows = g.buckets.map(function (m) {
-      var cells = list.map(function (gr) {
+      var cells = cols.map(function (gr) {
         var v = m.byGroup[gr.id] || 0;
-        return '<td class="num">' + (v ? gbp(v) : '–') + '</td>';
+        return '<td class="num' + (gr.area ? ' area-col' : '') + '">' + (v ? gbp(v) : '–') + '</td>';
       }).join('');
       return '<tr><td>' + m.label + '</td>' + cells + '<td class="num">' + gbp(bucketTotal(m, list)) +
         '</td><td class="num">' + (m.bulkSpend ? gbp(m.bulkSpend) : '–') + '</td></tr>';
